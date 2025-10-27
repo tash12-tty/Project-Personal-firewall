@@ -3,19 +3,13 @@ from scapy.all import sniff, IP, TCP, UDP
 
 LOG_FILE = "firewall_log.txt"
 
-# ----------------------------
-# User-defined firewall rules
-# ----------------------------
-# You can modify or add more
 rules = [
     {"protocol": "tcp", "port": 80, "action": "allow"},   # Allow HTTP
     {"protocol": "tcp", "port": 22, "action": "block"},   # Block SSH
     {"protocol": "udp", "port": 53, "action": "allow"},   # Allow DNS
 ]
 
-# ----------------------------
-# Apply iptables rules
-# ----------------------------
+
 def apply_rules():
     os.system("sudo iptables -F")  # Flush all old rules
     for rule in rules:
@@ -30,9 +24,7 @@ def apply_rules():
 
     print("[+] Firewall rules applied successfully.\n")
 
-# ----------------------------
-# Log packets
-# ----------------------------
+
 logged_packets = set()
 
 def log_packet(packet, status):
@@ -42,9 +34,7 @@ def log_packet(packet, status):
             f.write(f"{packet[IP].src} -> {packet[IP].dst} | {status}\n")
         logged_packets.add(key)
 
-# ----------------------------
-# Monitor network packets
-# ----------------------------
+
 def monitor_traffic(packet):
     if IP in packet:
         if TCP in packet or UDP in packet:
